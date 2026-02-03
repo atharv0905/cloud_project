@@ -1,0 +1,39 @@
+from fastapi import Depends, FastAPI
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import text
+from database import engine, Base, get_db
+import models
+import schemas
+import crud
+from auth import verify_post_api_key, verify_get_api_key
+
+app = FastAPI(title="Base FastAPI Server")
+
+@app.on_event("startup")
+async def startup_event():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+        print("Database tables connected and created.")
+        
+
+@app.post("/random", response_model=schemas.RandomResponse)
+async def create_random_value(
+    data: schemas.RandomCreate,
+    db: AsyncSession = Depends(get_db),
+    _: None = Depends(verify_post_api_key),
+):
+    return await crud.create_random(db, data.ranint)
+
+
+@app.get("/random", response_model=list[schemas.RandomResponse])
+async def get_random_values(
+    limit: int = 50,
+    db: AsyncSession = Depends(get_db),
+    _: None = Depends(verify_get_api_key),
+):
+    return await crud.get_random_values(db, limit)
+
+
+@app.get("/")
+def health_check():
+    return {"status": "server is running"}

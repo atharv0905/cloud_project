@@ -6,8 +6,17 @@ import models
 import schemas
 import crud
 from auth import verify_post_api_key, verify_get_api_key
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Base FastAPI Server")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # dev only
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.on_event("startup")
 async def startup_event():

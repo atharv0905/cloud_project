@@ -25,22 +25,22 @@ async def startup_event():
         print("Database tables connected and created.")
         
 
-@app.post("/random", response_model=schemas.RandomResponse)
+@app.post("/random", response_model=schemas.ExternalResponse)
 async def create_random_value(
-    data: schemas.RandomCreate,
+    data: schemas.ExternalCreate,
     db: AsyncSession = Depends(get_db),
     _: None = Depends(verify_post_api_key),
 ):
-    return await crud.create_random(db, data.ranint)
+    return await crud.create_external_data(db, data.data)
 
 
-@app.get("/random", response_model=list[schemas.RandomResponse])
+@app.get("/random", response_model=list[schemas.ExternalResponse])
 async def get_random_values(
-    limit: int = 50,
+    limit: int = 10,
     db: AsyncSession = Depends(get_db),
     _: None = Depends(verify_get_api_key),
 ):
-    return await crud.get_random_values(db, limit)
+    return await crud.get_external_data(db, limit)
 
 
 @app.get("/")

@@ -9,8 +9,8 @@ dotenv.load_dotenv()
 POST_API_KEY = os.getenv("POST_API_KEY")
 GET_API_KEY  = os.getenv("GET_API_KEY")
 
-POST_URL = "http://127.0.0.1:8000/random"
-GET_URL  = "http://127.0.0.1:8000/random?limit=10"
+POST_URL = "http://localhost:8000/random"
+GET_URL  = "http://localhost:8000/random"
 
 
 # ----------------------------
@@ -28,7 +28,7 @@ def start_sending_data():
                     "x-api-key": POST_API_KEY
                 },
                 json={
-                    "ranint": random_num
+                    "data": {"ranint": random_num}
                 }
             )
 
@@ -39,7 +39,7 @@ def start_sending_data():
         except Exception as e:
             print("Insert failed:", e)
 
-        time.sleep(10)  # every 15 minutes
+        time.sleep(60*15)  # every 15 minutes
 
 
 # ----------------------------

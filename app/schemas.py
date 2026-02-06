@@ -1,10 +1,10 @@
 from pydantic import BaseModel
 from datetime import datetime
 
-class RandomCreate(BaseModel):
-    ranint: int
+class ExternalCreate(BaseModel):
+    data: dict
 
-class RandomResponse(RandomCreate):
+class ExternalResponse(ExternalCreate):
     id: int
     created_at: datetime
 

@@ -5,7 +5,7 @@ from database import engine, Base, get_db
 import models
 import schemas
 import crud
-from auth import verify_post_api_key, verify_get_api_key
+from auth import verify_post_api_key, verify_get_api_key, verify_get_ip_whitelist
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Base FastAPI Server")
@@ -39,6 +39,7 @@ async def get_random_values(
     limit: int = 10,
     db: AsyncSession = Depends(get_db),
     _: None = Depends(verify_get_api_key),
+    __: None = Depends(verify_get_ip_whitelist),
 ):
     return await crud.get_external_data(db, limit)
 
